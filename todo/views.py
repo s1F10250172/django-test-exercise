@@ -32,6 +32,8 @@ def detail(request, task_id):
     }
     return render(request, 'todo/detail.html', context)
 def update(request, task_id):
+
+def delete(request, task_id):
     try:
         task = Task.objects.get(pk=task_id)
     except Task.DoesNotExist:
@@ -46,3 +48,5 @@ def update(request, task_id):
         'task': task
     }
     return render(request, "todo/edit.html", context)
+    task.delete()
+    return redirect(index)
