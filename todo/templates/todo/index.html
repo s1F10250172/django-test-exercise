@@ -32,71 +32,59 @@
       <a href="{% url 'index' %}?order=post">Sort by Posted Date</a>
     </div>
 
-    {% for task in tasks %}
-    <div class="text">
-      <h2><a href="{% url 'detail' task.id %}">{{ task.title }} </a></h2>
-      <ul>
-        <li>Posted at: {{ task.posted_at }}</li>
-        {% if task.due_at %} 
-        <li>Due at: {{ task.due_at }}</li>
-        {% endif %}
-        {% if task.completed %} 
-        <li>Status: Completed</li>
-        {% else %}
-        <li>Status: Not Completed</li>
-        {% endif %}
-      </ul>
-    </div>
-    {% endfor %}
-
-    <!-- 完了タスクの表示・非表示を切り替える全体のチェックボックス -->
-<div style="margin-bottom: 15px;">
-    <label style="cursor: pointer; font-weight: bold;">
-        <input type="checkbox" id="hide-completed-checkbox"> 完了したタスクを非表示にする
-    </label>
+    <<<<<<< SEARCH
+=======
+>>>>>>> REPLACE
+<div>
+  <a href="{% url 'index' %}?order=due">Sort by Due Date</a> |
+  <a href="{% url 'index' %}?order=post">Sort by Posted Date</a>
 </div>
 
-<ul class="todo-list">
-    {% for todo in todo_list %}
-        <!-- 完了しているタスクには 'completed-task' クラスを付与する -->
-        <li class="todo-item {% if todo.completed %}completed-task{% endif %}" style="margin: 8px 0;">
-            <!-- ここに既存のチェックボックスやタスク内容のコードが入ります -->
-            <input type="checkbox" {% if todo.completed %}checked{% endif %} disabled>
-            <span>{{ todo.title }}</span>
-            
-            {% if todo.completed %}
-                <span class="badge" style="color: gray; font-size: 0.8em;">(完了)</span>
-            {% endif %}
-        </li>
-    {% empty %}
-        <li>タスクはありません。</li>
-    {% endfor %}
-</ul>
+<!-- 完了タスクの表示・非表示を切り替える全体のチェックボックス -->
+<div style="margin-bottom: 15px; margin-top: 15px;">
+  <label style="cursor: pointer; font-weight: bold;">
+    <input type="checkbox" id="hide-completed-checkbox"> 完了したタスクを非表示にする
+  </label>
+</div>
+
+{% for task in tasks %}
+<!-- 完了しているタスクには 'completed-task' クラスを付与する -->
+<div class="task {% if task.completed %}completed-task{% endif %}">
+  <h2><a href="{% url 'detail' task.id %}">{{ task.title }} </a></h2>
+  <ul class="meta">
+    <li>Posted at: {{ task.posted_at }}</li>
+    {% if task.due_at %}
+    <li>Due at: {{ task.due_at }}</li>
+    {% endif %}
+    {% if task.completed %}
+    <li>Status: Completed</li>
+    {% else %}
+    <li>Status: Not Completed</li>
+    {% endif %}
+  </ul>
+</div>
+{% endfor %}
+
+{% endblock %}
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // 「非表示にする」チェックボックスを取得
-        const hideCheckbox = document.getElementById('hide-completed-checkbox');
+  document.addEventListener('DOMContentLoaded', function() {
+    // 「非表示にする」チェックボックスを取得
+    const hideCheckbox = document.getElementById('hide-completed-checkbox');
+    
+    if (hideCheckbox) {
+      hideCheckbox.addEventListener('change', function() {
+        // 完了済みタスク（class="completed-task"）をすべて取得
+        const completedTasks = document.querySelectorAll('.completed-task');
         
-        if (hideCheckbox) {
-            hideCheckbox.addEventListener('change', function() {
-                // 完了済みタスク（class="completed-task"）をすべて取得
-                const completedTasks = document.querySelectorAll('.completed-task');
-                
-                completedTasks.forEach(function(task) {
-                    if (hideCheckbox.checked) {
-                        task.style.display = 'none';  // チェックONで非表示にする
-                    } else {
-                        task.style.display = 'block'; // チェックOFFで表示する（※li要素の場合は 'list-item' でも可）
-                    }
-                });
-            });
-        }
-    });
+        completedTasks.forEach(function(task) {
+          if (hideCheckbox.checked) {
+            task.style.display = 'none';  // チェックONで非表示にする
+          } else {
+            task.style.display = 'block'; // チェックOFFで表示する
+          }
+        });
+      });
+    }
+  });
 </script>
-
-
-
-  </body>
-
-</html>
