@@ -17,7 +17,7 @@
     </div>
     <div>
         <label for="completedInput">completed:</label>
-        <input id="completedInput" name="Completed" type="checkbox" {% if task.Completed %}checked{% endif %}>
+        <input id="completedInput" name="Completed" type="checkbox" {% if task.completed %}checked="checked"{% endif %}>
     </div>
     <div>
         <button type="submit">Submit</button>
