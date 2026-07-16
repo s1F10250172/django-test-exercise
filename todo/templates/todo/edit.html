@@ -16,6 +16,10 @@
         <input id="dueInput" name="due_at" type="datetime-local" value="{{ task.due_at|date:'Y-m-d H:i' }}">
     </div>
     <div>
+        <label for="completedInput">completed:</label>
+        <input id="completedInput" name="Completed" type="checkbox" {% if task.completed %}checked="checked"{% endif %}>
+    </div>
+    <div>
         <button type="submit">Submit</button>
     </div>
 </form>
