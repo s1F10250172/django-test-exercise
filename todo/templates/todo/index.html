@@ -19,18 +19,35 @@
 <br>
 
 <div>
-  <a href="{% url 'index' %}?order=due">Sort by Due Date</a> |
-  <a href="{% url 'index' %}?order=post">Sort by Posted Date</a>
+  <a href="{% url 'index' %}?order=due{% if only_incomplete %}&incomplete=1{% endif %}">Sort by Due Date</a> |
+  <a href="{% url 'index' %}?order=post{% if only_incomplete %}&incomplete=1{% endif %}">Sort by Posted Date</a>
 </div>
+
+<form action="{% url 'index' %}" method="get" style="margin-bottom: 15px; margin-top: 15px;">
+  <input type="hidden" name="order" value="{{ order|default:'post' }}">
+
+  <label style="cursor: pointer; font-weight: bold;">
+    <input
+      type="checkbox"
+      name="incomplete"
+      value="1"
+      {% if only_incomplete %}checked{% endif %}
+      onchange="this.form.submit()"
+    >
+    未完了のみ表示
+  </label>
+</form>
 
 {% for task in tasks %}
 <div class="task">
-  <h2><a href="{% url 'detail' task.id %}">{{ task.title }} </a></h2>
+  <h2><a href="{% url 'detail' task.id %}">{{ task.title }}</a></h2>
   <ul class="meta">
     <li>Posted at: {{ task.posted_at }}</li>
+
     {% if task.due_at %}
     <li>Due at: {{ task.due_at }}</li>
     {% endif %}
+
     {% if task.completed %}
     <li>Status: Completed</li>
     {% else %}
