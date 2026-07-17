@@ -35,7 +35,7 @@
     </div>
 
     <form action="{% url 'index' %}" method="get" style="margin-bottom: 15px; margin-top: 15px;">
-      <input type="hidden" name="order" value="{{ order }}">
+      <input type="hidden" name="order" value="{{ order|default:'post' }}">
 
       <label style="cursor: pointer; font-weight: bold;">
         <input
