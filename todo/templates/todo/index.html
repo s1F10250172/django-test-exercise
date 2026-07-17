@@ -1,72 +1,59 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="ja">
+{% extends 'todo/base.html' %}
 
-  <head>
-    <title>To Do Application</title>
-    <meta charset="UTF-8">
-    <meta name="author" content="INIAD">
-  </head>
+{% block content %}
+<p>You can submit tasks from the following form.</p>
+<form action="{% url 'index' %}" method="post">
+  {% csrf_token %}
+  <div>
+    <label for="titleInput">Title</label><br>
+    <input id="titleInput" name="title" type="text" placeholder="Input title">
+  </div>
+  <div>
+    <label for="dueInput">Due at:</label><br>
+    <input id="dueInput" name="due_at" type="datetime-local">
+  </div>
+  <div>
+    <button type="submit">Submit</button>
+  </div>
+</form>
+<br>
 
-  <body>
-    <h1>Sample To Do Application</h1>
-    <p>You can submit tasks from the following form.</p>
+<div>
+  <a href="{% url 'index' %}?order=due{% if only_incomplete %}&incomplete=1{% endif %}">Sort by Due Date</a> |
+  <a href="{% url 'index' %}?order=post{% if only_incomplete %}&incomplete=1{% endif %}">Sort by Posted Date</a>
+</div>
 
-    <form action="{% url 'index' %}" method="post">
-      {% csrf_token %}
-      <div>
-        <label for="titleInput">Title</label><br>
-        <input id="titleInput" name="title" type="text" placeholder="Input title">
-      </div>
-      <div>
-        <label for="dueInput">Due at:</label><br>
-        <input id="dueInput" name="due_at" type="datetime-local">
-      </div>
-      <div>
-        <button type="submit">Submit</button>
-      </div>
-    </form>
+<form action="{% url 'index' %}" method="get" style="margin-bottom: 15px; margin-top: 15px;">
+  <input type="hidden" name="order" value="{{ order|default:'post' }}">
 
-    <br>
+  <label style="cursor: pointer; font-weight: bold;">
+    <input
+      type="checkbox"
+      name="incomplete"
+      value="1"
+      {% if only_incomplete %}checked{% endif %}
+      onchange="this.form.submit()"
+    >
+    未完了のみ表示
+  </label>
+</form>
 
-    <div>
-      <a href="{% url 'index' %}?order=due{% if only_incomplete %}&incomplete=1{% endif %}">Sort by Due Date</a> |
-      <a href="{% url 'index' %}?order=post{% if only_incomplete %}&incomplete=1{% endif %}">Sort by Posted Date</a>
-    </div>
+{% for task in tasks %}
+<div class="task">
+  <h2><a href="{% url 'detail' task.id %}">{{ task.title }}</a></h2>
+  <ul class="meta">
+    <li>Posted at: {{ task.posted_at }}</li>
 
-    <form action="{% url 'index' %}" method="get" style="margin-bottom: 15px; margin-top: 15px;">
-      <input type="hidden" name="order" value="{{ order|default:'post' }}">
+    {% if task.due_at %}
+    <li>Due at: {{ task.due_at }}</li>
+    {% endif %}
 
-      <label style="cursor: pointer; font-weight: bold;">
-        <input
-          type="checkbox"
-          name="incomplete"
-          value="1"
-          {% if only_incomplete %}checked{% endif %}
-          onchange="this.form.submit()"
-        >
-        未完了のみ表示
-      </label>
-    </form>
-
-    {% for task in tasks %}
-    <div class="task">
-      <h2><a href="{% url 'detail' task.id %}">{{ task.title }}</a></h2>
-      <ul class="meta">
-        <li>Posted at: {{ task.posted_at }}</li>
-
-        {% if task.due_at %}
-        <li>Due at: {{ task.due_at }}</li>
-        {% endif %}
-
-        {% if task.completed %}
-        <li>Status: Completed</li>
-        {% else %}
-        <li>Status: Not Completed</li>
-        {% endif %}
-      </ul>
-    </div>
-    {% endfor %}
-
-  </body>
-</html>
+    {% if task.completed %}
+    <li>Status: Completed</li>
+    {% else %}
+    <li>Status: Not Completed</li>
+    {% endif %}
+  </ul>
+</div>
+{% endfor %}
+{% endblock %}

@@ -1,32 +1,27 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="ja">
+{% extends 'todo/base.html' %}
 
-<head>
-    <title>To Do Application</title>
-    <meta charset="UTF-8">
-    <meta name="author" content="INIAD">
-</head>
+{% block header %}Edit task{% endblock %}
 
-<body>
-    <h1>Edit task</h1>
-    <p>You can edit tasks from the following form.</p>
+{% block content %}
+<p>You can edit tasks from the following form.</p>
 
-    <form action="{% url 'update' task.id %}" method="post">
-        {% csrf_token %}
-        <div>
-            <label for="titleInput">Title</label><br>
-            <input id="titleInput" name="title" type="text" placeholder="Input title" value="{{ task.title }}">
-        </div>
-        <div>
-            <label for="dueInput">Due at:</label><br>
-            <input id="dueInput" name="due_at" type="datetime-local" value="{{ task.due_at|date:"Y-m-d H:i" }}">
-        </div>
-        <div>
-            <button type="submit">Submit</button>
-        </div>
-    </form>
-    <br>
-</body>
-
-</html>
+<form action="{% url 'update' task.id %}" method="post">
+    {% csrf_token %}
+    <div>
+        <label for="titleInput">Title</label><br>
+        <input id="titleInput" name="title" type="text" placeholder="Input title" value="{{ task.title }}">
+    </div>
+    <div>
+        <label for="dueInput">Due at:</label><br>
+        <input id="dueInput" name="due_at" type="datetime-local" value="{{ task.due_at|date:'Y-m-d H:i' }}">
+    </div>
+    <div>
+        <label for="completedInput">completed:</label>
+        <input id="completedInput" name="Completed" type="checkbox" {% if task.completed %}checked="checked"{% endif %}>
+    </div>
+    <div>
+        <button type="submit">Submit</button>
+    </div>
+</form>
+<br>
+{% endblock %}
